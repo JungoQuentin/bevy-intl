@@ -26,12 +26,16 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-bevy = "0.16"
-bevy-intl = "0.2.1"
+bevy = "0.17"
+bevy-intl = "0.2.2"
 
 # Optional: Force bundled translations on all platforms
-# bevy-intl = { version = "0.2.0", features = ["bundle-only"] }
+# bevy-intl = { version = "0.2.2", features = ["bundle-only"] }
 ```
+
+**Version Compatibility:**
+- Bevy 0.17.x: use `bevy-intl = "0.2.2"`
+- Bevy 0.16.x: use `bevy-intl = "0.2.1"`
 
 Initialize the plugin in your Bevy app:
 
@@ -100,7 +104,7 @@ src/
 **Force Bundled Mode:**
 
 ```toml
-bevy-intl = { version = "0.2.1", features = ["bundle-only"] }
+bevy-intl = { version = "0.2.2", features = ["bundle-only"] }
 ```
 
 This forces bundled translations on all platforms

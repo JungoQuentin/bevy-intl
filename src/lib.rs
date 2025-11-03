@@ -292,7 +292,7 @@ fn load_bundled_data() -> Result<LangMap, Box<dyn std::error::Error>> {
     
     // Check if bundled translations are empty (happens when bevy-intl is built standalone)
     let value: Value = serde_json::from_str(BUNDLED_TRANSLATIONS)?;
-    if value.as_object().map_or(true, |obj| obj.is_empty()) {
+    if !matches!(value.as_object(), Some(obj) if !obj.is_empty()) {
         // Return empty translation map - will fall back to filesystem loading
         return Ok(HashMap::new());
     }
