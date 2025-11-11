@@ -4,9 +4,15 @@ use serde_json::{ Value, Map };
 use anyhow::Result;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    println!("cargo:warning=COUCOU");
+
+
     // Try to find messages directory in the consuming project
-    let messages_dir = find_messages_directory()?;
+    let messages_dir = find_messages_directory()?; // -> ca me semble cassé
+
+
     let out_path = Path::new(&std::env::var("OUT_DIR")?).join("all_translations.json");
+    println!("cargo:warning=COUCOU-{messages_dir:?} = {out_path:?}");
 
     // Always create the file, even if empty, so include_str! works
     if !messages_dir.exists() {
@@ -34,6 +40,7 @@ fn build_translations(messages_dir: &Path) -> Result<Value> {
 
         let lang_code = lang_dir.file_name().to_string_lossy().to_string();
         let mut translation_files = Map::new();
+        println!("cargo:warning=ehhe{lang_dir:?}");
 
         for file_entry in fs::read_dir(lang_dir.path())? {
             let file = file_entry?;
@@ -57,23 +64,45 @@ fn build_translations(messages_dir: &Path) -> Result<Value> {
 }
 
 fn find_messages_directory() -> Result<PathBuf> {
+    println!("cargo:warning=try find");
+
+    if let Ok(workspace_root) = std::env::var("CARGO_MANIFEST_DIR") {
+        println!("cargo:warning=manifest exists");
+        let workspace_root = Path::new(&workspace_root);
+        println!("cargo:warning=root : {workspace_root:?}");
+        let messages_path = workspace_root.join("messages");
+        if messages_path.exists() {
+            println!("cargo:warning=exists: {messages_path:?}");
+            return Ok(messages_path);
+        }
+
+    }
+
+
+
     // First try the workspace root (if CARGO_TARGET_DIR is set)
     if let Ok(target_dir) = std::env::var("CARGO_TARGET_DIR") {
+        println!("cargo:warning=in workspace");
         let workspace_root = Path::new(&target_dir)
             .parent()
             .ok_or_else(|| anyhow::anyhow!("Invalid target dir"))?;
+        println!("cargo:warning=root : {workspace_root:?}");
         let messages_path = workspace_root.join("messages");
         if messages_path.exists() {
+            println!("cargo:warning=exists: {messages_path:?}");
             return Ok(messages_path);
         }
     }
 
     // Try current working directory
     let cwd_messages = Path::new("messages");
+    println!("cargo:warning=cwd_messages");
     if cwd_messages.exists() {
+        println!("cargo:warning=existss1 {cwd_messages:?}");
         return Ok(cwd_messages.to_path_buf());
     }
 
+    println!("cargo:warning=still not, try parent ?");
     // Try parent directories up to root
     let mut current = std::env::current_dir()?;
     loop {
