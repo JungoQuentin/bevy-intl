@@ -67,6 +67,8 @@ fn find_messages_directory() -> Result<PathBuf> {
     println!("cargo:warning=try find");
 
     println!("cargo:warning=CARGO_MANIFEST_DIR: {:?}", std::env::var("CARGO_MANIFEST_DIR"));
+    println!("cargo:warning=CARGO_WORKSPACE_DIR: {:?}", std::env::var("CARGO_WORKSPACE_DIR"));
+    println!("cargo:warning=OUT_DIR: {:?}", std::env::var("OUT_DIR"));
 
     if let Ok(workspace_root) = std::env::var("CARGO_MANIFEST_DIR") {
         println!("cargo:warning=manifest exists");
