@@ -69,24 +69,10 @@ fn find_messages_directory() -> Result<PathBuf> {
     println!("cargo:warning=CARGO_MANIFEST_DIR: {:?}", std::env::var("CARGO_MANIFEST_DIR"));
     println!("cargo:warning=CARGO_WORKSPACE_DIR: {:?}", std::env::var("CARGO_WORKSPACE_DIR"));
     println!("cargo:warning=OUT_DIR: {:?}", std::env::var("OUT_DIR"));
-
-    if let Ok(workspace_root) = std::env::var("CARGO_MANIFEST_DIR") {
-        println!("cargo:warning=manifest exists");
-        let workspace_root = Path::new(&workspace_root);
-        println!("cargo:warning=root : {workspace_root:?}");
-        let messages_path = workspace_root.join("messages");
-        if messages_path.exists() {
-            println!("cargo:warning=exists: {messages_path:?}");
-            return Ok(messages_path);
-        }
-
-    }
-
-
     println!("cargo:warning=CARGO_TARGET_DIR: {:?}", std::env::var("CARGO_TARGET_DIR"));
 
     // First try the workspace root (if CARGO_TARGET_DIR is set)
-    if let Ok(target_dir) = std::env::var("CARGO_TARGET_DIR") {
+    if let Ok(target_dir) = std::env::var("OUT_DIR") {
         println!("cargo:warning=in workspace");
         let workspace_root = Path::new(&target_dir)
             .parent()
