@@ -66,6 +66,8 @@ fn build_translations(messages_dir: &Path) -> Result<Value> {
 fn find_messages_directory() -> Result<PathBuf> {
     println!("cargo:warning=try find");
 
+    println!("cargo:warning=CARGO_MANIFEST_DIR: {:?}", std::env::var("CARGO_MANIFEST_DIR"));
+
     if let Ok(workspace_root) = std::env::var("CARGO_MANIFEST_DIR") {
         println!("cargo:warning=manifest exists");
         let workspace_root = Path::new(&workspace_root);
@@ -79,6 +81,7 @@ fn find_messages_directory() -> Result<PathBuf> {
     }
 
 
+    println!("cargo:warning=CARGO_TARGET_DIR: {:?}", std::env::var("CARGO_TARGET_DIR"));
 
     // First try the workspace root (if CARGO_TARGET_DIR is set)
     if let Ok(target_dir) = std::env::var("CARGO_TARGET_DIR") {
