@@ -83,6 +83,18 @@ fn find_messages_directory() -> Result<PathBuf> {
             println!("cargo:warning=exists: {messages_path:?}");
             return Ok(messages_path);
         }
+
+        let mut current = PathBuf::from( workspace_root);
+        loop {
+            let messages_path = current.join("messages");
+            if messages_path.exists() {
+                return Ok(messages_path);
+            }
+
+            if !current.pop() {
+                break;
+            }
+        }
     }
 
     // Try current working directory
