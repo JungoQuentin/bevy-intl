@@ -58,13 +58,25 @@ fn build_translations(messages_dir: &Path) -> Result<Value> {
 
 fn find_messages_directory() -> Result<PathBuf> {
     // First try the workspace root (if CARGO_TARGET_DIR is set)
-    if let Ok(target_dir) = std::env::var("CARGO_TARGET_DIR") {
+    if let Ok(target_dir) = std::env::var("OUT_DIR") {
         let workspace_root = Path::new(&target_dir)
             .parent()
             .ok_or_else(|| anyhow::anyhow!("Invalid target dir"))?;
         let messages_path = workspace_root.join("messages");
         if messages_path.exists() {
             return Ok(messages_path);
+        }
+
+        let mut current = PathBuf::from(workspace_root);
+        loop {
+            let messages_path = current.join("messages");
+            if messages_path.exists() {
+                return Ok(messages_path);
+            }
+
+            if !current.pop() {
+                break;
+            }
         }
     }
 
